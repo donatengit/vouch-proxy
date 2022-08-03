@@ -38,6 +38,7 @@ _hostname() {
 
   case $(uname) in
     FreeBSD) HOSTNAME_CMD="hostname";;
+     Darwin) HOSTNAME_CMD="hostname";;
           *) HOSTNAME_CMD="hostname --fqdn"
   esac
 
