@@ -176,6 +176,10 @@ func main() {
 	healthH := http.HandlerFunc(handlers.HealthcheckHandler)
 	router.HandlerFunc(http.MethodGet, "/healthcheck", timelog.TimeLog(healthH))
 
+	tokenH := http.HandlerFunc(handlers.TokenRequestHandler)
+	router.HandlerFunc(http.MethodGet, cfg.Cfg.DocumentRoot+"/token", timelog.TimeLog(tokenH))
+
+
 	// this is the documented implemenation for static file serving but it doesn't seem to work with go:embed
 	// router.ServeFiles("/static/*filepath", http.FS(staticFs))
 
