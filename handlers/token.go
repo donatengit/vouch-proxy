@@ -56,6 +56,6 @@ func TokenRequestHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	renderResponse(w, "User: "+claims.Username+"\nToken: "+jwt)
+	renderResponse(w, "User: "+claims.Username+"\nAuthorization: Bearer "+jwt)
 	
 }
