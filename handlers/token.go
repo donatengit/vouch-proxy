@@ -20,6 +20,7 @@ import (
 
 func renderResponse(w http.ResponseWriter, msg string) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Cache-Control", "no-store")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(msg))
 }
@@ -57,8 +58,4 @@ func TokenRequestHandler(w http.ResponseWriter, r *http.Request) {
 
 	renderResponse(w, "User: "+claims.Username+"\nToken: "+jwt)
 	
-
-	// TODO
-	// parse the jwt and see if the claim is valid for the domain
-
 }
