@@ -41,10 +41,13 @@ import (
 // in certain situations you'll need to add both a `mapstructure` tag used by viper
 // as well as a `envconfig` tag used by https://github.com/kelseyhightower/envconfig
 // though most of the time envconfig will use the struct key's name: VOUCH_PORT VOUCH_JWT_MAXAGE
+// default values should be set in .defaults.yml
 type Config struct {
 	LogLevel      string   `mapstructure:"logLevel"`
 	Listen        string   `mapstructure:"listen"`
 	Port          int      `mapstructure:"port"`
+	SocketMode    int      `mapstructure:"socket_mode"`
+	SocketGroup   string   `mapstructure:"socket_group"`
 	DocumentRoot  string   `mapstructure:"document_root" envconfig:"document_root"`
 	WriteTimeout  int      `mapstructure:"writeTimeout"`
 	ReadTimeout   int      `mapstructure:"readTimeout"`
@@ -177,6 +180,8 @@ type ctxKey int
 //
 // so we process these in backwards order (defaults then config file)
 func Configure() {
+	logger.Info("Copyright 2020-2022 the " + Branding.FullName + " Authors")
+	logger.Warn(Branding.FullName + " is free software with ABSOLUTELY NO WARRANTY.")
 
 	Logging.configureFromCmdline()
 
@@ -203,6 +208,7 @@ func Configure() {
 
 	fixConfigOptions()
 	Logging.configure()
+
 	if err := configureOauth(); err == nil {
 		setProviderDefaults()
 	}
@@ -431,7 +437,7 @@ func basicTest() error {
 			return fmt.Errorf("%s.jwt.public_key_file should not be set when using signing method %s", Branding.LCName, Cfg.JWT.SigningMethod)
 		}
 
-		if len(Cfg.JWT.PrivateKeyFile) > 9 {
+		if len(Cfg.JWT.PrivateKeyFile) > 0 {
 			return fmt.Errorf("%s.jwt.private_key_file should not be set when using signing method %s", Branding.LCName, Cfg.JWT.SigningMethod)
 		}
 
